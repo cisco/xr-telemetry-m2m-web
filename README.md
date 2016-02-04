@@ -86,5 +86,5 @@ The code in this repository was put together for demonstration purposes and so c
   * Run the app in multiple tabs simultaneously is not supported.
   * Some operations are slow, in particular the 'Current Config' tab can take several minutes to calculate the correct mapping in the case of a large set of config.
 
-Any comments/questions/bugs? Raise an [issue](link/to/issues/page).
+Any comments/questions/bugs? Raise an [issue](https://github.com/cisco/xr-telemetry-m2m-web/issues).
 
