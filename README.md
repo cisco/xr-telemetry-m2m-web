@@ -1,7 +1,7 @@
 M2M demo GUI client
 ===================
 
-This is a demo web client for the new M2M capability - a new API providing programmatic access to manageability data, available in IOS-XR from version 6.0 onwards. This app allows the following:
+This is a demo web client for the M2M capability - an experimental API providing programmatic access to manageability data, available in IOS-XR from version 6.0 onwards. This app allows the following:
 
   * Connect to an IOS-XR device over SSH.
   * Explore the manageability schema used by M2M and Telemetry.
