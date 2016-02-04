@@ -1,0 +1,22 @@
+//
+// Mixin to include fonts.
+// Order of the includes matters, and it is: normal, bold, italic, bold+italic.
+//
+
+@mixin enable-font($font-family, $filename-base, $weight: normal, $style: normal) {
+  $file-path: "#{$filename-base}-#{$weight}-#{$style}-webfont";
+
+  @font-face {
+    font-family: $font-family;
+
+    src: url('#{$file-path}.eot');
+    src: url('#{$file-path}.eot?#iefix')     format('embedded-opentype'),
+    url('#{$file-path}.woff')                format('woff'),
+    url('#{$file-path}.ttf')                 format('truetype'),
+    url('#{$file-path}.svg##{$font-family}') format('svg');
+
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+

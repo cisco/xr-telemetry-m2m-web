@@ -1,0 +1,10 @@
+//
+// Get (and JSON-CLI)
+//
+
+// Style the path/nested format selector
+#get, #json_cli {
+	input + span {
+		font-size: $font-size-small;
+	}
+}

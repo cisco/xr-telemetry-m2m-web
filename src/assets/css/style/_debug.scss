@@ -1,0 +1,64 @@
+// Debug panel
+
+.debug {
+    // positioning
+    position: fixed;
+    left: 13%;
+    bottom: 0;
+    display: block;
+    width: 85%;
+    height: 50%;
+    overflow-y: auto;
+
+    // initially hidden
+    display: none;
+
+    // style
+    border: solid 5px $cisco-red;
+    background: #f0f0f0;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        td {
+            border: none;   
+        }
+    }
+
+    .json_request, .json_reply {
+        white-space: pre-wrap;
+        font-family: "Source Code Pro";
+        font-size: .7em;
+        padding: 0 1em;
+    }
+
+    .json_request {
+        color: $cisco-teal;
+    }
+
+    .json_reply {
+        color: $cisco-red;
+    }
+
+    tr > td + td {
+        min-width: 120px;
+        background-size: 120px 80px;
+        background-repeat: no-repeat;
+    }
+
+    tr > td.json_reply + td {
+        background-image: url(arrow-red-right.png);
+        background-position: left center;
+        & + td {
+            background: none;
+        }
+    }
+
+    tr > td:not(.json_reply) + td {
+        background-image: url(arrow-teal-left.png);
+        background-position: right center;  
+        & + td {
+            background: none;
+        }
+    }
+}

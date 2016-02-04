@@ -1,0 +1,65 @@
+// Telemetry panel
+
+#policy_builder {
+    .label {
+        display: inline-block;
+        margin: 4px 4px 4px 0;
+    }
+    input {
+        margin: 2px 4px 2px 0;
+    }
+    .right_top_aligned {
+        width: 6em;
+        text-align: right;
+        vertical-align: top;
+    }
+    .paths {
+        display: inline-block;
+    }
+}
+
+form.telemetry {
+    .label {
+        display: inline-block;
+        margin: 4px 4px 4px 0;
+    }
+}
+
+.policy_loader {
+
+    float: right;
+    margin-right: 1em;
+    margin-bottom: 1em;
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	li:hover {
+        background-color: $cisco-teal;
+        color: white;
+	}
+
+	a {
+		text-decoration: none;
+		display: block;
+	}
+}
+
+.preloaded_policies {
+    height: 5em;
+    overflow: auto;
+
+}
+
+#telemetry_policy_contents {
+    width: 100%;
+    max-width: 100%;
+}
+
+h4 {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}

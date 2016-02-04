@@ -1,0 +1,88 @@
+// Telemetry GPB tab
+
+#proto_editor {
+    .proto_message_name {
+        margin-left: 0.6em;
+    }
+
+    .proto_fields {
+        margin-left: 2em;
+        border-spacing: 0.5em 0em;
+    }
+
+    // Set anything in a deleted message or field to be greyed out
+    .deleted * {
+        color:  lightgrey;
+        text-decoration:line-through;
+    }
+
+    // We want buttons of deleted fields in non deleted messages to be normal
+    .proto_message:not(.deleted) .deleted .proto_delete, .delete_button_col {
+        color: black;
+        text-decoration:none;
+    }
+
+    .duplicate, .forbidden_name, .tag_not_number, .invalid_identifier {
+        color: red;
+    }
+}
+
+#floating_gpb_nav {
+    top: 10%;
+    right: 10%;
+    max-height: 80%;
+    position: fixed;
+    padding: 5px 20px 5px 5px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: $cisco-teal;
+    background-color: white;
+    overflow: hidden;
+
+    .msg_with_err {
+        color:red;
+    }
+
+    .deleted_msg {
+        color:lightgrey;
+    }
+
+    input {
+        margin-top: 0.25em;
+    }
+}
+
+#gpb_nav_body {
+    resize: vertical;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.editor_err {
+    color: red;
+    margin-left: 1em;
+}
+
+.err_tag:before {
+    content: 'Error: tag not an integer';
+}
+
+.err_invalid:before {
+    content: 'Error: invalid characters used';
+}
+
+.err_forbidden:before {
+    content: 'Error: name forbidden';
+}
+
+.err_dup_tag:before {
+    content: 'Error: tag not unique in message';
+}
+
+.err_dup_name:before {
+    content: 'Error: name is not unique in message'
+}
+
+.err_dup_msg:before {
+    content: 'Error: message name not unique';
+}

@@ -1,0 +1,13 @@
+#!/bin/sh
+echo $$ > /tmp/run.pid
+cd /src
+PIDFILE=/tmp/twistd.pid
+if [ -e "$PIDFILE" ]; then
+  read pid < $PIDFILE
+  kill $pid
+fi
+while true; do
+  echo "Compiling CSS and JS..."
+  ./compile-css-and-js
+  PYTHONPATH=. twistd --pidfile $PIDFILE --nodaemon m2m_demo
+done

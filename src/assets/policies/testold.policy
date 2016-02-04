@@ -1,0 +1,16 @@
+{
+ "Name": "test",
+ "Metadata": {
+     "Version": 25,
+     "Description": "Test policy",
+     "Comment": "This is the first draft",
+     "Identifier": "<data that may be sent by the encoder to the mgmt stn>"},
+ "CollectionGroups": {
+     "FirstGroup": {
+         "Period": 30,
+         "Paths": [
+             "RootOper.InfraStatistics.Interface([*]).Latest.GenericCounters"
+         ]
+     }
+ }
+}

@@ -1,0 +1,27 @@
+// Script panel
+
+.script_loader {
+
+	overflow-y: scroll;
+    font-size: $font-size-body;
+    float: right;
+    margin-right: 2em;
+    height: 12em;
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		font-weight: 100;
+	}
+
+	li:hover {
+        background-color: $cisco-teal;
+        color: white;
+	}
+
+	a {
+		text-decoration: none;
+		display: block;
+	}
+}

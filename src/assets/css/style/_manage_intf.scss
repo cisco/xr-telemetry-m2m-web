@@ -1,0 +1,59 @@
+//
+// Manage Interfaces tab
+//
+
+form.manage_intf {
+	float: left;
+
+    .label {
+        display: inline-block;
+        width: 6em;
+        margin: 4px 4px 4px 0;
+        text-align: right;
+    }
+
+    .buttons {
+    	margin-top: .5em;
+
+    	button {
+    		outline: 0;
+    		background: white;
+    		border: 1px solid;
+    		border-radius: 3px;
+    		color: inherit;
+    		margin: 0;
+    		font-weight: inherit;
+    		font-size: $font-size-body;
+    		display: inline-block;
+
+    		&:hover {
+    			background-color: $cisco-teal-background;	
+    		}
+    	}
+    }
+
+    .spinner {
+        clear: both;
+        display: block;
+    }
+}
+
+hr {
+	clear: both;
+}
+
+#manage_intf_json {
+    position: absolute;
+    top: 8em;
+    right: 0;
+	font-size: $font-size-small;
+	font-family: $monospace-font-family;
+    color: black;
+	border: solid 1px $cisco-teal-background;
+	float: right;
+	min-width: 30em;
+	margin: 0 1em;
+	padding: 10px;
+	border-radius: 10px;
+	white-space: pre;
+}

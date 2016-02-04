@@ -1,0 +1,21 @@
+//
+// Fonts to load up
+//
+// Order of the includes matters, and it is: normal, bold, italic, bold+italic.
+//
+
+//
+// For development, go crazy and load em all up, but for 
+// deployment, be more specific
+//
+
+@include enable-font("Source Sans Pro", "sourcesanspro", 300);
+@include enable-font("Source Sans Pro", "sourcesanspro");
+@include enable-font("Source Sans Pro", "sourcesanspro", bold);
+
+@include enable-font("Source Code Pro", "sourcecodepro");
+@include enable-font("Source Code Pro", "sourcecodepro", bold);
+
+textarea {
+  font-family: monospace;
+}

@@ -1,0 +1,30 @@
+// Main
+
+body {
+    overflow-y: hidden;
+}
+
+.main {
+    // positioning
+    height: 100vh;
+    overflow-y: auto;
+    color: $cisco-teal;
+    position: relative;
+    padding-top: .25em;
+}
+
+// Logo on main canvas
+.wrapper {
+    width: 100%;
+    background: {
+        image: url(cisco.png);
+        size: 82px 44px;
+        repeat: no-repeat;
+        position: right $font-size-body*2 top $font-size-body;
+    }
+}
+
+// To allow them to be displayed side by side
+#telemetry, #explorer {
+    display: table-cell;
+}

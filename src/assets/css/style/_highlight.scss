@@ -1,0 +1,33 @@
+//
+// Highlight.js styling
+//
+// Currently just specified for JSON and Protocol Buffer highlights
+//
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: black;
+}
+
+.hljs-attribute, .hljs-keyword, .hljs-built_in, .hljs-class, .hljs-function {
+    color: DarkGreen;
+}
+
+.hljs-number, .hljs-literal, .hljs-string {
+    color: purple;
+}
+
+.hljs-comment {
+    color: #ccc;
+    font-style: italic;
+}
+
+.hljs-title, .hljs-value {
+    color: black;
+}
+
+.hljs-keyword, .hljs-title, .hljs-class {
+    font-weight: bold;
+}

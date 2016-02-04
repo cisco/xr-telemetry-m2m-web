@@ -1,0 +1,88 @@
+//
+// Connection tab
+//
+
+#connection {
+
+    .status {
+        margin-bottom: $font-size-body;
+    }
+
+    .label {
+        display: inline-block;
+        width: 5em;
+        margin: 4px .5em 4px 0;
+        text-align: right;
+    }
+
+    .not_connected {
+        color: $cisco-red;
+    }
+
+    label {
+        font-size: $font-size-body;
+    }
+
+    fieldset {
+        border: none;
+        margin: 0;
+        padding: 0 0 1em 0;
+        input[type="submit"] {
+            color: inherit;
+        }
+        &:disabled {
+            color: $cisco-teal-disabled;
+        }
+    }
+
+}
+
+#connection_failure_reason {
+    color: $cisco-red;
+    font-style: italic;
+    margin-left: 2em;
+}
+
+#connection_status {
+    font-weight: bold;
+}
+
+#connection_loader {
+    display: none;
+    margin-left: 1em;
+}
+
+#creds {
+    display: none;
+    border: 1px solid $cisco-teal;
+    padding: 1.5em $font-size-body $font-size-body $font-size-body;
+    width: 17em;
+}
+
+#disconnect {
+    display: none;
+    position: relative;
+    top: -3px;
+    color: $cisco-red;
+    background: white;
+    border: 1px solid $cisco-red;
+    border-radius: 4px;
+}
+
+#toggle_creds {
+    outline: 0;
+    background: white;
+    border: 1px solid;
+    color: inherit;
+    margin: 0;
+    font-weight: inherit;
+    font-size: inherit;
+    display: block;
+    position: relative;
+    top: 1em;
+}
+
+#yang_mode {
+    margin-top: 40em;
+    padding-bottom: 10em;
+}

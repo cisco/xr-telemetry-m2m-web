@@ -1,0 +1,14 @@
+// Expandable schema items have a '>' symbol
+li.expandable {
+  list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAADBJREFUGJVjYIAABQYGhgNQGis4wMDA8J+BgeEBLkUKUEnSFTHhspNkK4hy5AFskgDKnRB+psX8UwAAAABJRU5ErkJggg==);
+}
+
+// Collapsible schema items have a 'v' symbol
+li.collapsible {
+  list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAADtJREFUGJVjYCACKDAwMByA0ljFDjAwMPxnYGB4ABVQgLL/Q+VQBB6gseGmIivCkERXhFUSWRFOSawAAEl7E3uv1iMcAAAAAElFTkSuQmCC);
+}
+
+// Schema items which are neither expandable nor collapsible have a 'o' symbol
+li.inert {
+  list-style-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAEhJREFUGJWNzkEKgDAQQ9GHCz2+VHoB8X7tEXQzFSmFGsgm80mGn9qQUcNHZK8y7s7pC9QBUGCZbTfgGtzO/skUtQU71lk7eACAxxJe+1qUpgAAAABJRU5ErkJggg==);
+}

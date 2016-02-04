@@ -1,0 +1,40 @@
+// Write File panel
+
+form.write_file {
+   .label {
+        display: inline-block;
+        margin: 4px 4px 4px 0;
+   }
+}
+
+.file_loader {
+
+    font-size: $font-size-body;
+    float: right;
+    margin-right: 2em;
+    height: 12em;
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		font-weight: 100;
+	}
+
+	li:hover {
+        background-color: $cisco-teal;
+        color: white;
+	}
+
+	a {
+		text-decoration: none;
+		display: block;
+	}
+}
+
+.preloaded_files {
+
+	height: 10em;
+    overflow-y: scroll;
+
+}

@@ -1,0 +1,30 @@
+//
+// All the actual CSS-generating style for this website
+//
+
+// overall style
+@import "base";
+@import "fonts";
+
+// generic panels
+@import "main";
+@import "nav";
+@import "debug";
+
+// single-use panels
+@import "about";
+@import "cfg_hist";
+@import "current_cfg";
+@import "get";
+@import "connection";
+@import "manage_intf";
+@import "script";
+@import "test";
+@import "write_file";
+@import "telemetry";
+@import "gpb";
+@import "features";
+
+// other
+@import "spinner";
+@import "highlight";

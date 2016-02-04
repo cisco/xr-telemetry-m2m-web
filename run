@@ -1,0 +1,45 @@
+#!/bin/bash
+
+usage()
+{
+    echo "Usage: ./run [-h] [-d]"
+    echo ""
+    echo "Boot the M2M GUI web server"
+    echo ""
+    echo "Optional arguments:"
+    echo "  -h, --help      Display this help message"
+    echo "  -d, --docker    Boot using Docker"
+    echo ""
+    exit 0
+}
+
+# Ensure at most one command line flag is present.
+if [ "$#" -gt 1 ]; then
+    echo "Too many arguments"
+    usage
+fi
+
+# Parse those command line flags present.
+for i in "$@"; do
+    case $i in
+        -h|--help)
+            usage
+            shift
+        ;;
+        -d|--docker)
+            DOCKER=true
+            shift
+        ;;
+    esac
+done
+
+# Now boot the GUI server, either with or without docker.
+if [ "$DOCKER" = true ]; then
+    rm -f $(find . -name \*.pyc)
+    docker build --rm -t m2m-demo .
+    docker run -d -v "$(/bin/pwd -P)/src:/src" -p 8080:8080 --name demo m2m-demo $*
+else
+    cd src
+    ./run
+    cd -
+fi

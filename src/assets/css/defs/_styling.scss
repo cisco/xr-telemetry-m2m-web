@@ -1,0 +1,25 @@
+//
+// Styling: set the core styling parameters for the site
+//
+
+//
+// Typography. Note that any font declaration here will have to actually
+// be loaded up by later CSS (see css/style/_fonts.scss)
+//
+$default-font-family: "Source Sans Pro";
+$monospace-font-family: "Source Code Pro";
+$default-font-color: #444;
+$base_line_height: 8px;
+$font-size-heading: 1.2em;
+$font-size-body: .8em;
+$font-size-small: .6em;
+
+//
+// Colours
+//
+$cisco-teal: #045669;
+$cisco-red: #c42032;
+
+$cisco-teal-disabled: #84aab3;
+$cisco-teal-background: #e6eef0;
+

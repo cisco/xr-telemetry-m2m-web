@@ -1,0 +1,30 @@
+//
+// Base
+//
+
+// Basics 
+body, input, select, textarea, button {
+    font-family: $default-font-family, sans-serif;
+    color: $default-font-color;
+}
+
+// enable presentation mode in Chrome to occupy the full screen
+body {
+    margin: 0;
+}
+
+// Turn off over-decorated links/buttons
+a { 
+	color: inherit;
+}
+
+// Keep textareas looking similar to textfields, at least on webkit
+textarea {
+	-webkit-appearance: textfield;
+}
+
+// Monospace
+pre {
+	font-family: $monospace-font-family;
+	font-size: $font-size-body;
+}

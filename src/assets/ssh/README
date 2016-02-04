@@ -1,0 +1,8 @@
+To install SSH key on an XR router:
+
+- [one time]: crypto key generate dsa
+- add "ssh server" to the config
+- use scp (with password) to copy cisco_pubkey.b64 to /disk0:
+- run crypto key import authentication disk0:/cisco_pubkey.b64
+
+Should now be able to ssh to the router without a password.

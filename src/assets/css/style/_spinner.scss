@@ -1,0 +1,15 @@
+//
+// Request spinner
+//
+
+form.ajax_form {
+	display: inline-block;
+	width: calc(100% - 300px);
+}
+
+.spinner {
+	display: inline-block;
+	width: 100px;
+	height: 15px;
+	background: url(activity.gif);
+}

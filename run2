@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# This provides a way to run a second instance of the web app on 8081 if you need it.
+# If you're not sure exactly what you're doing, use ./run instead.
+
+docker run -d -v $(/bin/pwd -P)/src:/src -p 8081:8080 --name demo2 m2m-demo $*
