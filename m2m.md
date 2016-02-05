@@ -1,7 +1,7 @@
 Machine-to-Machine API
 ======================
 
-The Machine-to-Machine (M2M) API provides an abstraction layer to expose the capabilities and services of the router to external clients, providing users with a simple means to automate management operations. The M2M API provides programmatic access to manageability data via the JSON-RPC protocol; a set of common JSON-RPC methods operate on all manageability data in the IOS-XR system.
+The Machine-to-Machine (M2M) API provides an experimental abstraction layer to expose the capabilities and services of the router to external clients, providing users with a simple means to automate management operations. The M2M API provides programmatic access to manageability data via the JSON-RPC protocol; a set of common JSON-RPC methods operate on all manageability data in the IOS-XR system.
 
 Concepts
 ========
@@ -51,7 +51,17 @@ Wildcards and limited pattern matching are supported in key-values to identify a
 
 The following pattern matching features are supported:
 
-  * Globbing, using the `*` character. Note that globbing is only supported on string types and interface names (and not, for example, network addresses).
+  * Globbing, using the `*` character. Note that MPG currently supports globbing for only the following MPG datatypes:
+    * STRING
+    * TEXT
+    * IDENTIFIER
+    * ENCODED_STRING
+    * BOUNDED_STRING
+    * BOUNDED_IDENTIFIER
+    * ENCODED_BOUNDED_STRING
+    * STRING_LIST
+    * INTERFACE_NAME
+    * INTERFACE_FORWARD
   * Disjunctions, using the `|` character.
   * Grouping, using the `(` and `)` characters.
  
