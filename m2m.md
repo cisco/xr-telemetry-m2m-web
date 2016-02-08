@@ -112,7 +112,9 @@ The JSON-RPC server is launched using the `run` command, either from the IOS-XR 
 
 Once the server has been started, commands can be entered on the server's stdin, and responses will appear on the server's stdout. Note that by default, the server will not echo input on the terminal, the `-e` option can be passed to turn local echo on.
 
-Note that IOS-XR supports at most 8 instances of the JSON-RPC server running concurrently.
+Note that IOS-XR supports at most 8 instances of the JSON-RPC server running concurrently. However, this requires 8 separate SSH connections. A user wishing to have that many simultaneous SSH sessions will have to increase the number of permitted sessions via the following configuration:
+
+    (config)#vty-pool default 0 8
 
 The following example illustrates starting the server and a simple request and response exchange:
 
@@ -256,9 +258,9 @@ The following JSON-RPC methods are supported by the M2M API. They are described 
   * `discard_changes`
   * `get_changes`
   * `get_schema`
-  * `cli_exec`
-  * `cli_get`
-  * `cli_set`
+  * `cli_exec` [version 6.1 onwards only]
+  * `cli_get` [version 6.1 onwards only]
+  * `cli_set` [version 6.1 onwards only]
   * `write_file`
   * `get_version`
 
@@ -619,6 +621,7 @@ The method returns an object describing the requested schema class, containing t
 For the key and value fields, the returned object contains the following fields:
 
   * `datatype`: a string describing the type of data. The possible values for this field are given in the MPG documentation.
+  * `internal_name`: if this is a bag, then it is the bag name, otherwise it is null.  The bag name will match the name field below, unless the schema specifies a Bag Display Name.
   * `name`: a string identifying the data.
   * `internal_name`: a string used internally to identify the data.
   * `description`: a verbose description of the data. Note that this may not be set, in which case the field will be set to null.
@@ -725,7 +728,7 @@ Response (server to client):
         }
     }
 
-### CLI Exec
+### CLI Exec [version 6.1 onwards only]
 The `cli_exec` method executes a given show command CLI, and returns the "raw" output from that show command (i.e. the output which would be seen when executing the show command from the console). It supports the following parameters:
 
   * `command` (mandatory) - The command to be executed. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"sh int br"` can be passed instead of `"show interfaces brief"`.
@@ -751,7 +754,7 @@ Response (server to client):
        "result": "\n               Intf       Intf        LineP              Encap  MTU        BW\n               Name       State       State               Type (byte)    (Kbps)\n--------------------------------------------------------------------------------\n                Nu0          up          up               Null  1500          0\n          Gi0/0/0/0          up          up               ARPA  1514    1000000\n          Gi0/0/0/1  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/2  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/3  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/4  admin-down  admin-down               ARPA  1514    1000000\n\n"
     }
 
-### CLI Get
+### CLI Get [version 6.1 onwards only]
 The `cli_get` method attempts to identify the schema classes containing the data associated with a given show command CLI, and returns the data for those classes - it is equivalent to using `schema-describe` on a show command and then performing a `get` request for the returned schemas. It supports the following parameters:
 
   * `command` (mandatory) - The command to be executed. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"sh int br"` can be passed instead of `"show interfaces brief"`.
@@ -886,7 +889,7 @@ Response (server to client):
         ]
     }
 
-### CLI Set
+### CLI Set [version 6.1 onwards only]
 The `cli_set` method sets or deletes the schema class associated with a given CLI command - it is equivalent to using `schema-describe` on a configuration command and then performing the corresponding set request. As with set requests, a `cli_set` request must be followed by a commit request in order to the commit the configuration change to the running configuration. It supports the following parameters:
 
   * `command` (mandatory) - The configuration command to be executed - note that only a single line of configuration can be entered, this includes commands which may be entered via a submode in the IOS-XR CLI. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"int Gig0/0/0/0 shut"` can be passed instead of `"interface GigabitEthernet0/0/0/0 shutdown"`.
