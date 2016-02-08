@@ -238,7 +238,7 @@ An example of using the M2M Console to identify the path for Interface Statistic
     m2mcon: RootOper.InfraStatistics> cd Interface
     m2mcon: RootOper.InfraStatistics.Interface>
 
-###Get Schema Method
+### Get Schema Method
 The M2M API provides a `get_schema` method, which returns information about a particular schema class. This information includes the class' children, which means that multiple `get_schema` calls can be chained together to build a complete picture of the schema - for example in an interactive app for browsing the schema. More information about the `get_schema` method is available in the M2M API Reference section.
 
 API Reference
@@ -248,8 +248,10 @@ M2M API Methods
 ---------------
 The following JSON-RPC methods are supported by the M2M API. They are described in more details in the sections below:
 
+  * `get_version`
   * `get`
   * `get_children`
+  * `get_parent` [API version 1.1 onwards]
   * `set`
   * `delete`
   * `replace`
@@ -258,16 +260,63 @@ The following JSON-RPC methods are supported by the M2M API. They are described 
   * `discard_changes`
   * `get_changes`
   * `get_schema`
-  * `cli_exec` [version 6.1 onwards only]
-  * `cli_get` [version 6.1 onwards only]
-  * `cli_set` [version 6.1 onwards only]
+  * `cli_exec`
+  * `cli_get`
+  * `cli_set` [API version 1.1 onwards]
+  * `cli_describe` [API version 1.2 onwards]
   * `write_file`
-  * `get_version`
+  * `normalize_path` [API version 1.1 onwards]
+
+### Get Version
+The `get_version` method returns the current version of the M2M API. It supports no parameters. It returns an object with two fields:
+
+  * `major`: The major API version.
+  * `minor`: The minor API version.
+
+The following table gives a summary of the different versions:
+
+ | Version | Description
+ | ------- | -----------
+ | 1.0	   | Original version, supported in IOS-XR 6.0
+ | 1.1	   | Supported in IOS-XR 6.1, adds the following new features:
+ |         | - Added the `get_parent` method.
+ |         | - Added the `normalize_path` method.
+ |         | - Added the `cli_set` method.
+ |         | - Support for nested output format in `get` and `cli_get` requests.
+ |         | - Support for bulk `set`, `delete` and `replace` operations.
+ | 1.2     | Supported in IOS-XR 6.1, adds the following new features:
+ |         | - Support for the `bag_types` field in the output of `get_schema`
+ |         | - `delete` now performs deletes optimally where possible (taking on the semantics of `replace`, which is maintained for backwards compatibility).
+ |         | - Added the `cli_describe` method.
+
+An example of the usage of this method is as follows:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get_version"
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+            "major": 1,
+            "minor": 2
+        }
+    }
 
 ### Get
 The `get` method is used to read manageability information. It supports the following parameters:
 
   * `path` (mandatory) - the path of the data to get.
+  * `format`, (optional from version 6.1 onwards) - allows the user to select between output formats. The following options are supported:
+    * `"pairs"`: This is the default option, the output is formatted as a list of key-value pairs.
+    * `"nested"`: The output is formatted as a nested hierarchy of JSON objects, with each section of the path represented by another level within the hierarchy. Keys and data are represented as fields within the objects.
 
 This method returns an array of paths and their corresponding data. For leaf classes, this array will only contain the value for the class which was requested; for container classes, the paths and values of all of the requested class' children are returned.
 
@@ -318,6 +367,106 @@ Response (server to client):
         ]
     }
 
+Examples of the usage of the nested format corresponding to the examples above are shown below. Firstly, nested output for a leaf class:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get",
+        "params": {
+             "path": "RootCfg.Hostname",
+             "format": "nested"
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+            "RootCfg": {
+                "Hostname": "PE-C"
+            }
+        }
+    }
+
+An example of nested output for a table container class is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get",
+        "params": {
+            "path": "RootOper.Interfaces.InterfaceBrief",
+            "format": "nested"
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+            "RootOper": {
+                "Interfaces": {
+                    "InterfaceBrief": [{
+                        "InterfaceName": "GigabitEthernet0/0/0/0",
+                        "MTU": 1500,
+                        "LineState": "IM_STATE_DOWN",
+                        "Description": "Connection to PE-A"
+                    }, {
+                        "InterfaceName": "GigabitEthernet0/0/0/1",
+                        "MTU": 1514,
+                        "LineState": "IM_STATE_UP",
+                        "Description": "Connection to PE-B"
+                    }]
+                }
+            }
+        }
+    }
+
+An example of nested output for a non-table container class is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get",
+        "params": {
+            "path": "RootCfg.VRF('vrf-a')",
+            "format": "nested"
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+           "RootCfg": {
+                "VRF": [{
+                    "Name": "vrf-a",
+                    "Create": true,
+                    "AF": [{
+                        "Family": "IPv4",
+                        "Transport": "Unicast",
+                        "Create": true,
+                        "MaximumPrefix": [1024, null]
+                    }]
+                }]
+            }
+        }
+    }
+
+
 ### Get Children
 The `get_children` method returns the "child" nodes of a given path in the schema. It is only supported on container classes, an error will be returned if `get_children` is called for a leaf class. It supports the following parameters:
 
@@ -353,6 +502,53 @@ Response (server to client):
         ]
     }
 
+### Get Parent [API version 1.1 onwards]
+The `get_parent` method returns the path representing the parent of a given path. It supports a single parameter:
+
+  * `path` (mandatory) - the path of the schema node whose parent to retrieve.
+
+On success, the response will contain the single path of the parent. An example exchange is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get_parent",
+        "params": {
+            "path": "RootOper.Interfaces.InterfaceBrief"
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "RootOper.Interfaces"
+    }
+
+An example exchange for a path which ends with keys is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get_parent",
+        "params": {
+            "path": "RootCfg.VRF('vrf-a')"
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0.,
+        "id": 1,
+        "result": "RootCfg.VRF"
+    }
+
 ### Set
 The `set` method writes the value of a leaf. It is only supported on paths in the configuration schema.
 
@@ -384,8 +580,36 @@ Response (server to client):
         "result": null
     }
 
+From version 1.1 onwards, the set method also supports setting multiple items in a single call, by passing arrays for the `path` and `value` parameters. The `path` and `value` arrays must be of equal length; an `invalid_argument_error` is returned if the lengths of these arrays differ. An example exchange for a bulk set request is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "set",
+        "params": {
+            "path": [
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/0']).VRF",
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/1']).VRF"
+            ],
+            "value": [
+                "vrf-a",
+                "vrf-b"
+            ]
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": null
+    }
+
 ### Delete
-The `delete` method deletes the contents of a path. It is only supported on paths in the configuration schema.
+The `delete` method deletes the contents of a path. It is only supported on paths in the configuration schema. From API version 1.2 onwards, this is an optimal delete, which takes the semantics of a replace operation. For earlier versions of the API, the `delete` method deletes everything under the subtree, table or leaf.
 
 It supports the following parameters:
 
@@ -414,12 +638,38 @@ Response (server to client):
         "result": null
     }
 
+From version 1.1 onwards, the `delete` method also supports deleting multiple items in a single call, by passing an array of paths for the `path` parameter. An example exchange for a bulk delete is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "delete",
+        "params": {
+            "path": [
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/0']).Shutdown",
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/1']).Shutdown"
+            ]
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": null
+    }
+
 ### Replace
 The `replace` method marks a set of data in the particular part of the schema for atomic replacement during a bulk configuration operation. It supports the following parameters:
 
   * `path` (mandatory) - the root of the schema subtree to replace. All items under this path will be replaced with any data under the same path which is in the commit buffer the next time the commit method is called. 
 
 The method has no return value - the response will contain an empty (null) result.
+
+Note that from API version 1.2, this method is deprecated in favor of the `delete` method, which now has the semantics of the `replace` method. The `replace` method is retained for backwards compatibility.
 
 The following shows an example of replacing the configuration for a particular interface with a different set of configuration, using the `replace`, `set` and `commit` methods. The `get` method is used to inspect the interface's configuration before and after the operation.
 
@@ -524,6 +774,30 @@ Get response (client to server):
         ]
     }
 
+From version 1.1 onwards, the `replace` method also supports replacing multiple items in a single call, by passing an array of `paths` for the path parameter. An example exchange for a bulk replace is shown below:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "replace",
+        "params": {
+            "path": [
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/0'])",
+                "RootCfg.InterfaceConfiguration(['act', 'GigabitEthernet0/0/0/1'])"
+            ]
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": null
+    }
+
 ### Commit and Commit Replace
 The `commit` method commits a bulk of configuration. Upon calling this method, the contents of the commit buffer (any sets, deletes and replaces which have been made since the last commit call) will be committed to the running configuration. It supports the following parameters:
 
@@ -605,7 +879,7 @@ The `get_schema` method returns information about a given schema class. It suppo
 
 The method returns an object describing the requested schema class, containing the following fields:
 
-  * `category` - the category of the schema class: `container` or `leaf`.
+  * `category`: the category of the schema class: `container` or `leaf`.
   * `children`: an array of paths for the child classes for the requested class, or an empty array if there are no children.
   * `description`: A string describing the class.
   * `hidden`: A boolean value indicating whether the class is hidden.
@@ -618,7 +892,26 @@ The method returns an object describing the requested schema class, containing t
   * `table_version`: If the class is part of a table, then this field contains the major and minor version numbers for the table. If the class is not part of a table, or if the table has no associated version information, then it is omitted.
   * `table_version_compatibility`: If the class is part of a table, then this field contains the version compatibility information for the table. If the class is not part of a table, or if the table has no associated version compatibility information, then it is omitted.
 
-For the key and value fields, the returned object contains the following fields:
+For the `bag_types` field, the objects associated with each bag type have the following fields:
+
+  * `name`: A string giving the name of the bag structure, union or enum
+  * `description`: A string giving a description of the data in this structure, union or enum.
+  * `datatype`: String describing the type of bag object this is one of `struct`, `union` or `enum`.
+  * `children`: A list of elements in this bag object. Each element of the bag object is described by a JSON object, the fields of which are described below.
+  * `datatype_args`: For union types, additional information about the discriminator of the union. This has the same fields as an entry in the `children` field. The fields of this object are discussed below.
+
+The `children` and `datatype_args` fields contain objects with the following fields:
+
+  * `name`: The name of the element in the bag structure, union or enum.
+  * `description`: String describing the element in the structure, union or enum.
+  * `datatype`: The type of the element. This can be one of `struct`, `union` or `enum`, or alternatively one of the primitive bag types. This field is omitted for elements of an enum.
+  * `datatype_name`: String giving the name of the structure, union or enum if this parameter is an instance of one of these; null otherwise. This field is omitted for elements of an enum.
+  * `status`: String describing the status of the element - whether it is mandatory, optional or a list of values. This is omitted for elements of an enum.
+  * `status_args`: For elements with list status, this field contains a list of objects, with n objects returned for a list with n levels. Each object has two fields:
+    * `fixed_length`: indicates whether or not the list is of fixed length.
+    * `max_length`: describes the maximum length of the list. If the list is arbitrarily long, then a null maximum length is reported. This is omitted for elements of non-list status.
+
+For the `key` and `value` fields, the returned object contains the following fields:
 
   * `datatype`: a string describing the type of data. The possible values for this field are given in the MPG documentation.
   * `internal_name`: if this is a bag, then it is the bag name, otherwise it is null.  The bag name will match the name field below, unless the schema specifies a Bag Display Name.
@@ -637,6 +930,57 @@ For the key and value fields, the returned object contains the following fields:
     * `optional`: The value may be specified for this parameter.
     * `ignored`: The value may be specified for this parameter, but any value given will have no effect on the system.
 
+The below sub-sections describe the different types which may be returned in the `datatype_args` field.
+
+#### Enumeration
+An enumeration is represented by a JSON object where each field corresponds to an enumeration label, and maps to the value and description of that label. This is best illustrated by example:
+
+    {
+        "Default": {
+            "value": 0,
+            "description": "Default interface mode"
+        },
+        "PointToPoint": {
+            "value": 1,
+            "description": "Point-to-point interface mode"
+        },
+        "Multipoint": {
+            "value": 2,
+            "description": "Multipoint interface mode"
+        },
+        "L2Transport": {
+            "value": 3,
+            "description": "L2 transport interface mode"
+        }
+    }
+
+#### Range Enumeration
+A range enumeration is a hybrid between an integer range and an enumeration, where enumeration labels are provided for certain values in the range. The range is defined by `min` and `max` fields, with an enum field providing the enumeration labels, as shown in the example below:
+
+    {
+        "min": 0,
+        "max": 4294967295,
+        "enum": {
+            "Blocked": {
+                "value": 0,
+                "description": "Blocked mesh group. Changed LSPs are not flooded over blocked interfaces",
+            }
+        }
+    }
+
+#### String List
+A string list is a hash of strings to meta-data related to the strings, as shown below:
+
+    {
+        "act": {
+            "description": "Interface is active"
+        },
+        "pre": {
+            "description": "Interface is preconfigured"
+        },
+    }
+
+#### Examples
 The following example shows the usage of `get_schema` on a container class:
 
 Request (client to server):
@@ -728,7 +1072,117 @@ Response (server to client):
         }
     }
 
-### CLI Exec [version 6.1 onwards only]
+The following example shows a `get_schema` request on a schema leaf with a bag value, demonstrating the `bag_types` field available in API version 1.2:
+
+Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "get_schema",
+        "params": {
+            "path": "RootOper.Interfaces.Summary",
+            "fields": ["value", "bag_types"]
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+            "value": [{
+                "datatype": "BAG",
+                "internal_name": "im_if_summary_info",
+                "name": "im_if_summary_info",
+                "description": "Interface summary information",
+                "datatype_args": null,
+                "repeat_count": 1,
+                "status": "MANDATORY"
+            }],
+            "bag_types": {
+                "im_if_summary_info": {
+                    "name": "im_if_summary_info",
+                    "description": "Interface summary bag",
+                    "datatype": "STRUCT",
+                    "datatype_name": "im_if_summary_info",
+                    "children": [{
+                        "name": "InterfaceTypeList,
+                        "description": "List of per interface type summary information",
+                        "datatype": "STRUCT"
+                        "datatype_name": "im_if_type_summary_td",
+                        "status": "LIST",
+                        "args": {"fixed_length": false, "max_length": null}
+                    }, {
+                        "name": "InterfaceCounts",
+                        "description": "Counts for all interfaces",
+                        "datatype": "STRUCT",
+                        "datatype_name": "im_if_group_counts_td",
+                        "status": "MANDATORY",
+                    }],
+                },
+                "im_if_type_summary_td": {
+                    "name": "im_if_type_summary_td",
+                    "description": "Interface type summary information",
+                    "datatype": "STRUCT",
+                    "datatype_name": "im_if_summary_td",
+                    "children": [{
+                        "name": "InterfaceTypeName",
+                        "description": "Name of the interface type",
+                        "datatype": "STRING",
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }, {
+                        "name": "InterfaceTypeDescription",
+                        "description": "Description of the interface type",
+                        "datatype": "STRING"
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }, {
+                        "name": "InterfaceCounts",
+                        "description": "Counts for interfaces of this type",
+                        "datatype": "STRUCT",
+                        "datatype_name": "im_if_group_counts_td",
+                        "status": "MANDATORY",
+                    }]
+                },
+                "im_if_group_counts_td": {
+                    "name": "im_if_group_counts_td",
+                   "description": "Interface counts",
+                   "datatype": "STRUCT",
+                   "datatype_name": "im_if_group_counts_td",
+                   "children": [{
+                        "name": "InterfaceCount",
+                        "description": "Number of interfaces",
+                        "datatype": "UINT32",
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }, {
+                        "name": "UpInterfaceCount",
+                        "description": "Number of interfaces in UP state",
+                        "datatype": "UINT32",
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }, {
+                        "name": "DownInterfaceCount",
+                        "description": "Number of interfaces in DOWN state",
+                        "datatype": "UINT32",
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }, {
+                        "name": "AdminDownInterfaceCount",
+                        "description": "Number of interfaces in an ADMINDOWN state",
+                        "datatype": "UINT32",
+                        "datatype_name": null,
+                        "status": "MANDATORY",
+                    }]
+                }
+            }
+        }
+    }
+
+### CLI Exec
 The `cli_exec` method executes a given show command CLI, and returns the "raw" output from that show command (i.e. the output which would be seen when executing the show command from the console). It supports the following parameters:
 
   * `command` (mandatory) - The command to be executed. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"sh int br"` can be passed instead of `"show interfaces brief"`.
@@ -754,10 +1208,11 @@ Response (server to client):
        "result": "\n               Intf       Intf        LineP              Encap  MTU        BW\n               Name       State       State               Type (byte)    (Kbps)\n--------------------------------------------------------------------------------\n                Nu0          up          up               Null  1500          0\n          Gi0/0/0/0          up          up               ARPA  1514    1000000\n          Gi0/0/0/1  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/2  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/3  admin-down  admin-down               ARPA  1514    1000000\n          Gi0/0/0/4  admin-down  admin-down               ARPA  1514    1000000\n\n"
     }
 
-### CLI Get [version 6.1 onwards only]
+### CLI Get
 The `cli_get` method attempts to identify the schema classes containing the data associated with a given show command CLI, and returns the data for those classes - it is equivalent to using `schema-describe` on a show command and then performing a `get` request for the returned schemas. It supports the following parameters:
 
   * `command` (mandatory) - The command to be executed. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"sh int br"` can be passed instead of `"show interfaces brief"`.
+  * `format` (optional from version 6.1 onwards) - Indicates which format the results should be returned in (pairs or nested). The usage of this parameter is the same as for the `get` method.
 
 The method returns an array of objects for the data associated with the given show command. The format of these objects is the same as returned by the get method.
 
@@ -889,7 +1344,7 @@ Response (server to client):
         ]
     }
 
-### CLI Set [version 6.1 onwards only]
+### CLI Set [API version 1.1 onwards]
 The `cli_set` method sets or deletes the schema class associated with a given CLI command - it is equivalent to using `schema-describe` on a configuration command and then performing the corresponding set request. As with set requests, a `cli_set` request must be followed by a commit request in order to the commit the configuration change to the running configuration. It supports the following parameters:
 
   * `command` (mandatory) - The configuration command to be executed - note that only a single line of configuration can be entered, this includes commands which may be entered via a submode in the IOS-XR CLI. Note that unique abbreviations are accepted, in the same way that they are accepted in the IOS-XR CLI - for example `"int Gig0/0/0/0 shut"` can be passed instead of `"interface GigabitEthernet0/0/0/0 shutdown"`.
@@ -938,6 +1393,69 @@ Response (server to client):
         "result": null
     }
 
+### CLI Describe [API version 1.2 onwards]
+The `cli_describe` method returns the schema paths and JSON-RPC methods required to perform the same operation as an input CLI command. This method takes the following parameters:
+
+  * `command` (mandatory) - the CLI command to map to its schema information.
+  * `configuration` (mandatory) - a Boolean flag that should be set to true if the command is a configuration command.
+
+On success, this method returns an array of objects with the following fields:
+
+  * `path`: a schema path that can be used to perform the required CLI command.
+  * `method`: the JSON-RPC method that should be used on this path
+  * `value`: for schema paths that should be set, this field gives the value to  set it to. This is omitted for commands that do not set any values.
+
+An example exchange for a successful request on a show command is shown below:
+
+CLI describe Request (client to server)
+
+    {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "cli_describe",
+        "params": {
+            "command": "show interfaces brief",
+            "configuration": false,
+        }
+    }
+
+Response (server to client)
+
+    {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "result": [{
+            "path": "RootOper.Interfaces.InterfaceBrief",
+            "method": "get",
+        }]
+    }
+
+An example exchange for a successful request on a configuration command is shown below:
+
+CLI describe Request (client to server):
+
+    {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "cli_describe",
+        "params": {
+            "command": "interface gigabitEthernet 0/0/0/0 shut",
+            "configuration": true,
+        }
+    }
+
+Response (server to client):
+
+    {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "result": [{
+            "path": "RootCfg. InterfaceConfiguration({'Active': 'act', 'InterfaceName': 'GigabitEthernet0/0/0/0'}).Shutdown",
+            "method": "set",
+            "value": true,
+        }]
+    }
+
 ### Write File
 The `write_file` method allows writing a text file to a location on the router's disk. If the file does not exist, it is created, it is created; if the file already exists, it is overwritten. It supports the following parameters:
 
@@ -946,30 +1464,30 @@ The `write_file` method allows writing a text file to a location on the router's
 
 The method has no return value - the response will contain an empty (null) result.
 
-### Get Version
-The `get_version` method returns the current version of the M2M API. It supports no parameters. It returns an object with two fields:
+### Normalize Path [API version 1.1 onwards]
+The `normalize_path` method validates that a given path is a valid path, and returns the path re-formatted to match the "standard" output format (for example using object notation for keys, rather than array notation). The method takes a single parameter:
 
-  * `major`: The major API version.
-  * `minor`: The minor API version.
+  * `path` (mandatory) - the path to normalize.
 
-The version of the API corresponding to this document is 1.0.
+If the path is valid, the normalized path is returned, otherwise an error indicating in which way the path is invalid is returned. An example exchange of a successful request is shown below:
 
-An example of the usage of this method is as follows:
-
-Request (client to server):
+Write file Request (client to server):
 
     {
         "jsonrpc": "2.0",
-        "id": 1,
-        "method": "get_version"
+        "id": "1",
+        "method": "normalize_path",
+        "params": {
+            "path": "RootOper.Interfaces.InterfaceBrief(['GigabitEthernet0/0/0/0'])"
+        }
     }
 
 Response (server to client):
 
     {
         "jsonrpc": "2.0",
-        "id": 1,
-        "result": {"major": 1, "minor": 0}
+        "id": "1",
+        "result": "RootOper.Interfaces.InterfaceBrief({\"InterfaceName\": \"GigabitEthernet0/0/0/0\"})"
     }
 
 Errors

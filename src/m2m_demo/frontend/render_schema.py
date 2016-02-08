@@ -17,7 +17,7 @@ def get_schema(api, path):
     return api.get_schema(path)
 
 def get_keys(api, path):
-    return api.get_keys(path)
+    return api.get_children(path)
 
 def extract_result(data):
     try:

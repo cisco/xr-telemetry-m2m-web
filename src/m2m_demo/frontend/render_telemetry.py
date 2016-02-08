@@ -42,7 +42,7 @@ class TelemetryTab(BaseResource):
                                             traceback=traceback,
                                             tab='telemetry')
 
-        d = request.sdata.api.telemetry(full_filename, contents)
+        d = request.sdata.api.write_file(full_filename, contents)
         d.addCallback(got_reply)
         d.addErrback(got_error)
 

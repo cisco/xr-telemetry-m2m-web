@@ -39,15 +39,25 @@ class JsonRpc(object):
     # The public API of the remote server, all return a 'deferred'.
     #
 
-    # Basic schema ops
+    # Version Inspection
+
+    @api_fn
+    def get_version(self):
+        return self._request("get_version")
+
+    # Access Operations
 
     @api_fn
     def get(self, path):
         return self._request("get", path=path)
 
     @api_fn
-    def get_keys(self, path):
-        return self._request("get_keys", path=path)
+    def get_children(self, path):
+        return self._request("get_children", path=path)
+
+    @api_fn
+    def get_parent(self, path_:
+        return self_request("get_parent", path=path)
 
     @api_fn
     def set(self, path, value):
@@ -61,7 +71,7 @@ class JsonRpc(object):
     def replace(self, path):
         return self._request("replace", path=path)
 
-    # Commit ops
+    # Config Operations
 
     @api_fn
     def commit(self, label="", comment=""):
@@ -88,7 +98,7 @@ class JsonRpc(object):
         else:
             return self._request("get_schema", path=path, fields=fields)
 
-    # CLI transition tools
+    # CLI Execution
 
     @api_fn
     def cli_exec(self, command):
@@ -103,12 +113,22 @@ class JsonRpc(object):
         return self._request("cli_set", command=command)
 
     @api_fn
+    def cli_describe(self, command, configuration):
+        return self._request("cli_describe",
+                             command=command,
+                             configuration=configuration)
+
+    # File Management Operations
+
+    @api_fn
     def write_file(self, filename, data):
         return self._request("write_file", filename=filename, data=data)
 
+    # Utility Operations
+
     @api_fn
-    def telemetry(self, filename, data):
-        return self._request("write_file", filename=filename, data=data)
+    def normalize_path(self, path):
+        return self._request("normalize_path", path=path)
 
     # YFW mode hack
     def yfw(self):
