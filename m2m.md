@@ -275,11 +275,38 @@ The `get_version` method returns the current version of the M2M API. It supports
 
 The following table gives a summary of the different versions:
 
-| Version | Description |
- | ------- | ----------- |
- | 1.0     | Original version, supported in IOS-XR 6.0 |
- | 1.1     | Supported in IOS-XR 6.1, adds the following new features:<ul><li>Added the `get_parent` method.</li><li>Added the `normalize_path` method.</li><li>Added the `cli_set` method.</li><li>Support for nested output format in `get` and `cli_get` requests.</li><li>Support for bulk `set`, `delete` and `replace` operations.</li></ul> |
- | 1.2     | Supported in IOS-XR 6.1, adds the following new features:<ul><li>Support for the `bag_types` field in the output of `get_schema`</li><li>`delete` now performs deletes optimally where possible (taking on the semantics of `replace`, which is maintained for backwards compatibility).</li><li>Added the `cli_describe` method.</li></ul> |
+<table>
+  <tr>
+    <th>Version</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>1.0</td>
+    <td>Original version, supported in IOS-XR 6.0</td>
+  </tr>
+  <tr>
+    <td>1.1</td>
+    <td>Supported in IOS-XR 6.1, adds the following new features:
+      <ul>
+        <li>Added the <code>get_parent</code> method.</li>
+        <li>Added the <code>normalize_path</code> method.</li>
+        <li>Added the <code>cli_set</code> method.</li>
+        <li>Support for nested output format in <code>get</code> and <code>cli_get</code> requests.</li>
+        <li>Support for bulk <code>set</code>, <code>delete</code> and <code>replace</code> operations.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>1.2</td>
+    <td>Supported in IOS-XR 6.1, adds the following new features:
+      <ul>
+        <li>Support for the <code>bag_types</code> field in the output of <code>get_schema</code></li>
+        <li><code>delete</code> now performs deletes optimally where possible (taking on the semantics of <code>replace</code>, which is maintained for backwards compatibility).</li>
+        <li>Added the <code>cli_describe</code> method.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 An example of the usage of this method is as follows:
 
