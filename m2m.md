@@ -52,16 +52,16 @@ Wildcards and limited pattern matching are supported in key-values to identify a
 The following pattern matching features are supported:
 
   * Globbing, using the `*` character. Note that MPG currently supports globbing for only the following MPG datatypes:
-    * STRING
-    * TEXT
-    * IDENTIFIER
-    * ENCODED_STRING
-    * BOUNDED_STRING
-    * BOUNDED_IDENTIFIER
-    * ENCODED_BOUNDED_STRING
-    * STRING_LIST
-    * INTERFACE_NAME
-    * INTERFACE_FORWARD
+    * `STRING`
+    * `TEXT`
+    * `IDENTIFIER`
+    * `ENCODED_STRING`
+    * `BOUNDED_STRING`
+    * `BOUNDED_IDENTIFIER`
+    * `ENCODED_BOUNDED_STRING`
+    * `STRING_LIST`
+    * `INTERFACE_NAME`
+    * `INTERFACE_FORWARD`
   * Disjunctions, using the `|` character.
   * Grouping, using the `(` and `)` characters.
  
@@ -275,19 +275,11 @@ The `get_version` method returns the current version of the M2M API. It supports
 
 The following table gives a summary of the different versions:
 
- | Version | Description
- | ------- | -----------
- | 1.0	   | Original version, supported in IOS-XR 6.0
- | 1.1	   | Supported in IOS-XR 6.1, adds the following new features:
- |         | - Added the `get_parent` method.
- |         | - Added the `normalize_path` method.
- |         | - Added the `cli_set` method.
- |         | - Support for nested output format in `get` and `cli_get` requests.
- |         | - Support for bulk `set`, `delete` and `replace` operations.
- | 1.2     | Supported in IOS-XR 6.1, adds the following new features:
- |         | - Support for the `bag_types` field in the output of `get_schema`
- |         | - `delete` now performs deletes optimally where possible (taking on the semantics of `replace`, which is maintained for backwards compatibility).
- |         | - Added the `cli_describe` method.
+| Version | Description |
+ | ------- | ----------- |
+ | 1.0     | Original version, supported in IOS-XR 6.0 |
+ | 1.1     | Supported in IOS-XR 6.1, adds the following new features:<ul><li>Added the `get_parent` method.</li><li>Added the `normalize_path` method.</li><li>Added the `cli_set` method.</li><li>Support for nested output format in `get` and `cli_get` requests.</li><li>Support for bulk `set`, `delete` and `replace` operations.</li></ul> |
+ | 1.2     | Supported in IOS-XR 6.1, adds the following new features:<ul><li>Support for the `bag_types` field in the output of `get_schema`</li><li>`delete` now performs deletes optimally where possible (taking on the semantics of `replace`, which is maintained for backwards compatibility).</li><li>Added the `cli_describe` method.</li></ul> |
 
 An example of the usage of this method is as follows:
 
@@ -1149,10 +1141,10 @@ Response (server to client):
                 },
                 "im_if_group_counts_td": {
                     "name": "im_if_group_counts_td",
-                   "description": "Interface counts",
-                   "datatype": "STRUCT",
-                   "datatype_name": "im_if_group_counts_td",
-                   "children": [{
+                    "description": "Interface counts",
+                    "datatype": "STRUCT",
+                    "datatype_name": "im_if_group_counts_td",
+                    "children": [{
                         "name": "InterfaceCount",
                         "description": "Number of interfaces",
                         "datatype": "UINT32",
@@ -1502,24 +1494,24 @@ Any errors encountered in the processing of a JSON-RPC method will be returned t
   * `message`: A textual description of the error.
   * `data`: An array of data describing each error which was encountered. Each array element is an object containing the following fields:
     * type: A string identifying the type of error. May be one of the following values:
-      * `config_commit_error`: A config commit transaction failed. The path, operation, value, category and error fields are used to describe the configuration error (or errors) in detail. Note that for a config_commit_error can represent multiple verification or apply errors, in which case these fields will contain arrays with the value for each separate error.
+      * `config_commit_error`: A config commit transaction failed. The path, operation, value, category and error fields are used to describe the configuration error (or errors) in detail. Note that for a `config_commit_error` can represent multiple verification or apply errors, in which case these fields will contain arrays with the value for each separate error.
       * `datatype_not_supported_error`:  The requested operation is not supported for the corresponding data type. Information about the unsupported operation is given in the message field.
       * `invalid_argument_error`: An input argument was detected to be invalid. The path field is used to indicate the path to which the error is related.
-      * `not_found_error`: An attempt was made to access data that doesn.t exist. The path field is used to indicate the path to which the error is related.
+      * `not_found_error`: An attempt was made to access data that doesn't exist. The path field is used to indicate the path to which the error is related.
       * `operation_not_supported_error`: The requested operation is not supported. The path field is used to indicate the path to which the error is related.
       * `path_hierarchy_error`: An invalid path through the schema hierarchy was specified. The element field is used to indicate the path element which was invalid, and the parent field is used to indicate the parent of the invalid element.
       * `path_key_content_error`: A path key value is not compatible with its schema data type. The value element is used to indicate the invalid value which was passed, and the param element is used to indicate the schema parameter object that the value failed to conform with.
-      * `path_key_structure_error`: A collection of path key values doesn.t have the correct structure. The value_seq field is used to indicate the sequence of values that was passed as the path naming, and the class field is used to indicate the schema class with which the values failed to conform.
+      * `path_key_structure_error`: A collection of path key values doesn't have the correct structure. The `value_seq` field is used to indicate the sequence of values that was passed as the path naming, and the class field is used to indicate the schema class with which the values failed to conform.
       * `path_string_format_error`: A string representation of the path is incorrectly formatted. The path field is used to indicate the path to which the error is related. 
       * `value_content_error`: An element in a value sequence is not compatible with its schema data type. The value element is used to indicate the invalid value which was passed, and the param element is used to indicate the schema parameter object that the value failed to conform with.
-      * `value_structure_error`: A collection of values doesn.t have the correct structure. The value_seq field is used to indicate the sequence of values that was passed, and the class field is used to indicate the schema class with which the values failed to conform.
+      * `value_structure_error`: A collection of values doesn't have the correct structure. The value_seq field is used to indicate the sequence of values that was passed, and the class field is used to indicate the schema class with which the values failed to conform.
       * `cisco_error`: An error not covered by one of the above error types was encountered during processing a request. A string providing more information about the error is presented in the message field.
       * `permissions_error`: The user did not have the required permissions to execute the call. More details are given in the message field.
-      * `file_exists_error`: The user provided an invalid filename to the write_file method, for example a directory that does not exist. More details are given in the message field.
+      * `file_exists_error`: The user provided an invalid filename to the `write_file` method, for example a directory that does not exist. More details are given in the message field.
     * `value`: Only present for errors relating to an invalid value (see above).
-    * `operation`: Only present for errors relating to configuration operations (see above). Allowed values are "CREATE", "SET" and "DELETE".
+    * `operation`: Only present for errors relating to configuration operations (see above). Allowed values are `"CREATE"`, `"SET"` and `"DELETE"`.
     * `error`: Only present for errors relating to configuration operations (see above). May be a single item, or an array if multiple errors were detected.
-    * `category`: Only present for errors relating to configuration operations (see above). Allowed values are "VERIFY" and "APPLY".
+    * `category`: Only present for errors relating to configuration operations (see above). Allowed values are `"VERIFY"` and `"APPLY"`.
     * `path`: Only present for errors for which a path is relevant (see above). 
     * `param`: Only present for errors relating to a schema parameter (see above).
     * `class`: Only present for errors for which a schema class is relevant (see above). 
