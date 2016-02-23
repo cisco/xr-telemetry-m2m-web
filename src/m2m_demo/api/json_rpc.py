@@ -56,7 +56,7 @@ class JsonRpc(object):
         return self._request("get_children", path=path)
 
     @api_fn
-    def get_parent(self, path_:
+    def get_parent(self, path):
         return self._request("get_parent", path=path)
 
     @api_fn
