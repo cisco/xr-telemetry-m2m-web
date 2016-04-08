@@ -68,9 +68,8 @@ class TelemetryTab(BaseResource):
                     " '%s'}).Policy({'PolicyName': '%s'})" % (group, policy_name)
         dest_path = "RootCfg.Telemetry.JSON.PolicyGroup({'PolicyGroupName':"\
                     " '%s'}).IPv4Address({'IPAddr': '%s', 'TCPPort': %s})" % (group, ip, port)
-        dest_value = {'IPAddress': ip, 'TCPPort': port}
-        yield api.set(name_path, policy_name)
-        yield api.set(dest_path, dest_value)
+        yield api.set(name_path, True)
+        yield api.set(dest_path, True)
         yield api.commit(comment='telemetry')
 
 html = '''\
