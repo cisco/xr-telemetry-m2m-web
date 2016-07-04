@@ -248,24 +248,24 @@ M2M API Methods
 ---------------
 The following JSON-RPC methods are supported by the M2M API. They are described in more details in the sections below:
 
-  * `get_version`
-  * `get`
-  * `get_children`
-  * `get_parent` [API version 1.1 onwards]
-  * `set`
-  * `delete`
-  * `replace`
-  * `commit`
-  * `commit_replace`
-  * `discard_changes`
-  * `get_changes`
-  * `get_schema`
-  * `cli_exec`
-  * `cli_get`
-  * `cli_set` [API version 1.1 onwards]
-  * `cli_describe` [API version 1.2 onwards]
-  * `write_file`
-  * `normalize_path` [API version 1.1 onwards]
+  * [`get_version`](#get-version)
+  * [`get`](#get)
+  * [`get_children`](#get-children)
+  * [`get_parent`](#get-parent-api-version-11-onwards) [API version 1.1 onwards]
+  * [`set`](#set)
+  * [`delete`](#delete)
+  * [`replace`](#replace)
+  * [`commit`](#commit-and-commit-replace)
+  * [`commit_replace`](#commit-and-commit-replace)
+  * [`discard_changes`](#discard-changes)
+  * [`get_changes`](#get-changes)
+  * [`get_schema`](#get-schema)
+  * [`cli_exec`](#cli-exec)
+  * [`cli_get`](#cli-get)
+  * [`cli_set`](#cli-set-api-version-11-onwards) [API version 1.1 onwards]
+  * [`cli_describe`](#cli-describe-api-version-12-onwards) [API version 1.2 onwards]
+  * [`write_file`](#write-file)
+  * [`normalize_path`](#normalize-path-api-version-11-onwards) [API version 1.1 onwards]
 
 ### Get Version
 The `get_version` method returns the current version of the M2M API. It supports no parameters. It returns an object with two fields:
