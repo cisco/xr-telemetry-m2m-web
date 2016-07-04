@@ -333,7 +333,7 @@ Response (server to client):
 The `get` method is used to read manageability information. It supports the following parameters:
 
   * `path` (mandatory) - the path of the data to get.
-  * `format`, (optional from version 6.1 onwards) - allows the user to select between output formats. The following options are supported:
+  * `format`, (optional from version 1.1 onwards) - allows the user to select between output formats. The following options are supported:
     * `"pairs"`: This is the default option, the output is formatted as a list of key-value pairs.
     * `"nested"`: The output is formatted as a nested hierarchy of JSON objects, with each section of the path represented by another level within the hierarchy. Keys and data are represented as fields within the objects.
 
